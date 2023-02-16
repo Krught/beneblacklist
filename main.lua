@@ -80,5 +80,5 @@ onopen()
 
 SLASH_BENEBLACK1 = "/beneblack"
 SlashCmdList["BENEBLACK"] = function(msg)
-   print("Benediction Blacklist Available At https://discord.gg/nD8utdgDHe")
+   print(addonTable.benediction_black_date)
 end 
