@@ -16,4 +16,4 @@ You can also appeal and reports at the above discord link.
 
 Typing '/beneblack' in chat will display the last time your blacklist was updated.
 
-Adding 'check' after the command to make /beneblack check, will reset your local blacklist and check the party again for any blacklisted players.  And will say in party chat if anyone is on the blacklist or if your party is good.
+Adding 'check' after the command to make '/beneblack check', will reset your local blacklist and check the party again for any blacklisted players.  And will say in party chat if anyone is on the blacklist or if your party is good.
