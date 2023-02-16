@@ -1,0 +1,8 @@
+## Interface: 00001
+## Title: Bene Blacklist
+## Notes: The Blacklist for Benediction.
+## Author: Remour
+## Version: 0.1
+
+benediction.lua
+main.lua

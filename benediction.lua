@@ -1,0 +1,3 @@
+local addonName, addonTable = ...
+
+addonTable.benediction_blacklist = {'Souline', 'Remour', 'Doomwalkers', 'Moongladis', 'Moonvenger'}
