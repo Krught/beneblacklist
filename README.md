@@ -6,7 +6,7 @@ Github source is updated every night at midnight to keep the list up to date wit
 
  
 
-Please Report players at  https://discord.gg/nD8utdgDH
+Please Report players at  https://discord.gg/benediction
 
  
 
