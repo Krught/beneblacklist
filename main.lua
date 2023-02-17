@@ -59,7 +59,7 @@ BeneBlack:SetScript("OnEvent", function(self, event, ...)
                     x_b_Ca = 0
                     is_in_tabl = inTable(addonTable.benediction_blacklist, unit_name)
                     if is_in_tabl == 1 then
-                        black_message = unit_name.." is on the Benediction Blacklist!  View The Blacklist At https://discord.gg/nD8utdgDHe"
+                        black_message = unit_name.." is on the Benediction Blacklist!  View The Blacklist At https://discord.gg/benediction"
                         black_message_mini = unit_name.." is on the Benediction Blacklist!"
                         display_text(black_message_mini)
                         SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
@@ -124,7 +124,7 @@ SlashCmdList["BENEBLACK"] = function(msg)
                     x_b_Ca = 0
                     is_in_tabl = inTable(addonTable.benediction_blacklist, unit_name)
                     if is_in_tabl == 1 then
-                        black_message = unit_name.." is on the Benediction Blacklist!  View The Blacklist At https://discord.gg/nD8utdgDHe"
+                        black_message = unit_name.." is on the Benediction Blacklist!  View The Blacklist At https://discord.gg/benediction"
                         black_message_mini = unit_name.." is on the Benediction Blacklist!"
                         display_text(black_message_mini)
                         SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
@@ -134,13 +134,20 @@ SlashCmdList["BENEBLACK"] = function(msg)
         end
         if (black_det == 0) then
             if IsInRaid() then
-                check_party = "Raid Clear Of Any Blacklisted Players.  View The Blacklist At https://discord.gg/nD8utdgDHe"
+                check_party = "Raid Clear Of Any Blacklisted Players.  View The Blacklist At https://discord.gg/benediction"
             elseif IsInGroup() then
-                check_party = "Party Clear Of Any Blacklisted Players.  View The Blacklist At https://discord.gg/nD8utdgDHe"
+                check_party = "Party Clear Of Any Blacklisted Players.  View The Blacklist At https://discord.gg/benediction"
             end
             SendChatMessage(check_party, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
             SendChatMessage(addonTable.benediction_black_date, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
         end
+    elseif (msg == "invite") then
+        black_down = "You Can Download BeneBlacklist At https://github.com/Krught/beneblacklist"
+        SendChatMessage(black_down, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+    elseif (msg == "report") then
+        report_msg = "Report Players To The Blacklist At https://discord.gg/benediction"
+        SendChatMessage(report_msg, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+        print(report_msg)
     else
         print(addonTable.benediction_black_date)
     end
