@@ -5,7 +5,6 @@ Shows a message in raid/party and on your screen when you join with a blackliste
 Github source is updated every night at midnight to keep the list up to date with the latest blacklisted players.
 
 
-
 Please Report players at  https://discord.gg/benediction
 
 You can also appeal and reports at the above discord link.
