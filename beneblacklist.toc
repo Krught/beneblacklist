@@ -1,8 +1,8 @@
-## Interface: 00001
+## Interface: 30401
 ## Title: Bene Blacklist
 ## Notes: The Blacklist for Benediction.
 ## Author: Remour
-## Version: 0.00028
+## Version: 0.00029
 
 benediction.lua
 main.lua
