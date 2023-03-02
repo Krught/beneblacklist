@@ -2,7 +2,7 @@
 ## Title: Bene Blacklist
 ## Notes: The Blacklist for Benediction.
 ## Author: Remour
-## Version: 0.00036
+## Version: 0.00037
 
 benediction.lua
 main.lua
