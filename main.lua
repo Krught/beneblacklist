@@ -51,8 +51,16 @@ BeneBlack:SetScript("OnEvent", function(self, event, ...)
             for i = 1, GetNumGroupMembers() do
                 if IsInRaid() then
                     unit_name, unit_realm = (UnitName("raid"..i))
+                    guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("raid"..i))
                 elseif IsInGroup() then
-                    unit_name, unit_realm = (UnitName("party"..i))
+                    if (i == 1) then
+                        unit_name, unit_realm = (UnitName("player"))
+                        guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("player"))
+                    else
+                        i = i - 1
+                        unit_name, unit_realm = (UnitName("party"..i))
+                        guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("party"..i))
+                    end
                 end
                 if (unit_realm == nil)
                 then
@@ -68,7 +76,6 @@ BeneBlack:SetScript("OnEvent", function(self, event, ...)
                     lookup_list = addonTable.faerlina_blacklist
                     lookup_g_list = addonTable.faerlina_blacklist_guild
                 end
-                guildName, guildRankName, guildRankIndex = GetGuildInfo(unit_name)
                 x_b_Ca = 0
                 is_in_tabl = inTable(BeneCGroup, unit_name)
                 if is_in_tabl == 0 then
@@ -117,8 +124,16 @@ SlashCmdList["BENEBLACK"] = function(msg)
             for i = 1, GetNumGroupMembers() do
                 if IsInRaid() then
                     unit_name, unit_realm = (UnitName("raid"..i))
+                    guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("raid"..i))
                 elseif IsInGroup() then
-                    unit_name, unit_realm = (UnitName("party"..i))
+                    if (i == 1) then
+                        unit_name, unit_realm = (UnitName("player"))
+                        guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("player"))
+                    else
+                        i = i - 1
+                        unit_name, unit_realm = (UnitName("party"..i))
+                        guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("party"..i))
+                    end
                 end
                 if (unit_realm == nil)
                 then
@@ -134,7 +149,6 @@ SlashCmdList["BENEBLACK"] = function(msg)
                     lookup_list = addonTable.faerlina_blacklist
                     lookup_g_list = addonTable.faerlina_blacklist_guild
                 end
-                guildName, guildRankName, guildRankIndex = GetGuildInfo(unit_name)
                 x_b_Ca = 0
                 is_in_tabl = inTable(BeneCGroup, unit_name)
                 if is_in_tabl == 0 then
