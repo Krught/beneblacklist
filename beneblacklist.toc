@@ -1,6 +1,6 @@
 ## Interface: 30401
 ## Title: Bene Blacklist
-## Notes: The Blacklist for Benediction.
+## Notes: The Blacklist for Classic.
 ## Author: Remour
 ## Version: 0.00052
 
