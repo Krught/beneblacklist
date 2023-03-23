@@ -2,7 +2,7 @@
 ## Title: Bene Blacklist
 ## Notes: The Blacklist for Classic.
 ## Author: Remour
-## Version: 0.00061
+## Version: 0.00062
 
 benediction.lua
 main.lua
