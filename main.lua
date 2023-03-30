@@ -28,17 +28,19 @@ function inTable(table_c_black, item)
 end
 function inTabletwo(table_c_black, item)
     x_b_Ca = 0
+    tag = 0
     for key, value in pairs(table_c_black) do
         if value == item then 
             x_b_Ca = 1
             black_det = 1
+            tag = key
         else
             if x_b_Ca ~= 1 then
                 x_b_Ca = 0
             end
         end
     end
-    return x_b_Ca
+    return x_b_Ca, tag
 end
 function inbattleground()
     bgspot = UnitInBattleground("player")
@@ -69,23 +71,30 @@ function getplayernameguildrealm(i, trade)
     end
     if (unit_realm == "Benediction") then
         lookup_list = addonTable.benediction_blacklist
+        lookup_p_tag = addonTable.benediction_blacklist_tag
         lookup_g_list = addonTable.benediction_blacklist_guild
+        lookup_g_tag = addonTable.benediction_blacklist_guild_tag
     elseif (unit_realm == "Faerlina") then
         lookup_list = addonTable.faerlina_blacklist
+        lookup_p_tag = addonTable.faerlina_blacklist_tag
         lookup_g_list = addonTable.faerlina_blacklist_guild
+        lookup_g_tag = addonTable.faerlina_blacklist_guild_tag
     else
         lookup_list = {}
         lookup_g_list = {}
+        lookup_p_tag = {}
+        lookup_g_tag = {}
         print("Classic Blacklist - " .. unit_name .. " on realm ".. unit_realm .. " is on an unsupported realm.")
     end
-return unit_name, guildName, lookup_list, lookup_g_list
+return unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag
 end
 local black_discord_link = "View The Blacklist At https://discord.gg/FCCdCnEF4d"
 function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
+    blacklist_popup = {}
     if (trade == false) then
-        unit_name, guildName, lookup_list, lookup_g_list = getplayernameguildrealm(i, false)
+        unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(i, false)
     else
-        unit_name, guildName, lookup_list, lookup_g_list = getplayernameguildrealm(1, true)
+        unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(1, true)
     end
     x_b_Ca = 0
     is_in_tabl = inTable(BeneCGroup, unit_name)
@@ -94,13 +103,15 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
             table.insert(BeneCGroup, unit_name)
         end
         x_b_Ca = 0
-        is_in_tabl = inTabletwo(lookup_list, unit_name)
+        is_in_tabl, tag = inTabletwo(lookup_list, unit_name)
         if is_in_tabl == 1 then
-            black_message = unit_name.." is on the Classic Blacklist!  " .. black_discord_link
+            tag_status = lookup_p_tag[tag]
+            black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
             black_message_mini = unit_name.." is on the Classic Blacklist!"
             display_text(black_message_mini)
             if (BeneSilence == false) then
                 SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
             else
                 print(black_message)
             end
@@ -113,13 +124,15 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
             table.insert(BeneDGroup, guildName)
         end
         x_b_Ca = 0
-        is_in_tabl = inTabletwo(lookup_g_list, guildName)
+        is_in_tabl, tag = inTabletwo(lookup_g_list, guildName)
         if is_in_tabl == 1 then
-            black_message = "<"..guildName.."> is on the Classic Blacklist!  " .. black_discord_link
+            tag_status = lookup_g_tag[tag]
+            black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
             black_message_mini = "<".. guildName.."> is on the Classic Blacklist!"
             display_text(black_message_mini)
             if (BeneSilence == false) then
                 SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
             else
                 print(black_message)
             end
