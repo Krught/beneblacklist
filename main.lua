@@ -107,7 +107,7 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
         if is_in_tabl == 1 then
             tag_status = lookup_p_tag[tag]
             black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
-            black_message_mini = unit_name.." is on the Classic Blacklist!"
+            black_message_mini = unit_name.." is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
             display_text(black_message_mini)
             if (BeneSilence == false) then
                 SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
@@ -128,7 +128,7 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
         if is_in_tabl == 1 then
             tag_status = lookup_g_tag[tag]
             black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
-            black_message_mini = "<".. guildName.."> is on the Classic Blacklist!"
+            black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
             display_text(black_message_mini)
             if (BeneSilence == false) then
                 SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
