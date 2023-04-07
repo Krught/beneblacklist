@@ -12,6 +12,8 @@ Please Report players on your server discord or over at https://discord.gg/FCCdC
 
 Supported Servers:
 
+All Servers Supported Now.  Currently only kept up to date w/ Benediction and Faerlina (more limited basis.)
+If you would like to help contribute to keeping the addon up to date on your realm, feel free to reach out to me on discord.
 Benediction - https://discord.gg/benediction
 
 Faerlina - https://discord.gg/faerlina
