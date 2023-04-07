@@ -46,6 +46,13 @@ function inbattleground()
     bgspot = UnitInBattleground("player")
 return bgspot
 end
+function remove_dash(text)
+    local pos = string.find(text, "-") -- find the position of the first "-"
+    if pos then -- if "-" is found
+        text = string.sub(text, 1, pos-1) -- remove all characters from pos to end of string
+    end
+return text
+end
 function getplayernameguildrealm(i, trade)
     if (trade == false) then
         if IsInRaid() then
@@ -65,27 +72,18 @@ function getplayernameguildrealm(i, trade)
         unit_name = TradeFrameRecipientNameText:GetText()
         guildName = ""
     end
-    if (unit_realm == nil)
-    then
+    if (unit_realm == nil) then
         unit_realm = GetRealmName()
     end
-    if (unit_realm == "Benediction") then
-        lookup_list = addonTable.benediction_blacklist
-        lookup_p_tag = addonTable.benediction_blacklist_tag
-        lookup_g_list = addonTable.benediction_blacklist_guild
-        lookup_g_tag = addonTable.benediction_blacklist_guild_tag
-    elseif (unit_realm == "Faerlina") then
-        lookup_list = addonTable.faerlina_blacklist
-        lookup_p_tag = addonTable.faerlina_blacklist_tag
-        lookup_g_list = addonTable.faerlina_blacklist_guild
-        lookup_g_tag = addonTable.faerlina_blacklist_guild_tag
-    else
-        lookup_list = {}
-        lookup_g_list = {}
-        lookup_p_tag = {}
-        lookup_g_tag = {}
-        print("Classic Blacklist - " .. unit_name .. " on realm ".. unit_realm .. " is on an unsupported realm.")
+    if (guildName == nil) then
+        guildName = ""
     end
+    unit_name = unit_name .. "-" .. unit_realm
+    guildName = guildName .. "-" .. unit_realm
+    lookup_list = addonTable.blacklist_name
+    lookup_p_tag = addonTable.blacklist_tag
+    lookup_g_list = addonTable.blacklist_guild
+    lookup_g_tag = addonTable.blacklist_guild_tag
 return unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag
 end
 local black_discord_link = "View The Blacklist At https://discord.gg/FCCdCnEF4d"
@@ -106,6 +104,7 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
         is_in_tabl, tag = inTabletwo(lookup_list, unit_name)
         if is_in_tabl == 1 then
             tag_status = lookup_p_tag[tag]
+            unit_name = remove_dash(unit_name)
             black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
             black_message_mini = unit_name.." is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
             display_text(black_message_mini)
@@ -127,6 +126,7 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
         is_in_tabl, tag = inTabletwo(lookup_g_list, guildName)
         if is_in_tabl == 1 then
             tag_status = lookup_g_tag[tag]
+            guildName = remove_dash(guildName)
             black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
             black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
             display_text(black_message_mini)
