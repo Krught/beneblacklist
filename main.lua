@@ -87,6 +87,8 @@ function getplayernameguildrealm(i, trade)
 return unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag
 end
 local black_discord_link = "View The Blacklist At https://discord.gg/FCCdCnEF4d"
+local last_guilds_checked = {}
+local current_guilds_checked = {}
 function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
     blacklist_popup = {}
     if (trade == false) then
@@ -127,22 +129,36 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
         if is_in_tabl == 1 then
             tag_status = lookup_g_tag[tag]
             guildName = remove_dash(guildName)
-            black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
-            black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
-            display_text(black_message_mini)
-            if (BeneSilence == false) then
-                SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-                SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-            else
-                print(black_message)
+            x_b_Ca = 0
+            is_in_tabl, null_tag = inTabletwo(last_guilds_checked, guildName)
+            if is_in_tabl == 0 then
+
+                black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
+                black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
+                display_text(black_message_mini)
+                if (BeneSilence == false) then
+                    SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                    SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                else
+                    print(black_message)
+                end
             end
         end
     end
+    table.insert(current_guilds_checked, guildName)
 end
 function checkedallplayers()
     BeneDGroup = {"S"}
 end
 
+
+local function for_i()
+    last_guilds_checked = current_guilds_checked
+    current_guilds_checked = {}
+    for i = 1, GetNumGroupMembers() do
+        mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, false)
+    end
+end
 
 BeneBlack:RegisterEvent("GROUP_ROSTER_UPDATE")
 BeneBlack:RegisterEvent("TRADE_SHOW")
@@ -154,9 +170,7 @@ BeneBlack:SetScript("OnEvent", function(self, event, ...)
         end
         if (IsInRaid() or IsInGroup()) then
             black_det = 0
-            for i = 1, GetNumGroupMembers() do
-                mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, false)
-            end
+            for_i()
         else
             BeneCGroup = {"S"}
         end
@@ -170,20 +184,17 @@ end)
 function onopen()
     BeneCGroup = {"S"}
     BeneDGroup = {"S"}
-    BeneSilence = false
 end
 onopen()
 
-SLASH_BENEBLACK1 = "/beneblack"
-SlashCmdList["BENEBLACK"] = function(msg)
-    if (msg == "check") then
-        BeneCGroup = {"S"}
-        black_det = 0
-        if (IsInRaid() or IsInGroup()) then
-            for i = 1, GetNumGroupMembers() do
-                mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, false)
-            end
-        end
+--Force Check Party Function
+function recheck_party()
+    BeneCGroup = {"S"}
+    black_det = 0
+    current_guilds_checked = {}
+    if (IsInRaid() or IsInGroup()) then
+        for_i()
+    -- end
         if (black_det == 0) then
             if IsInRaid() then
                 check_party = "Raid Clear Of Any Blacklisted Players.  "  .. black_discord_link
@@ -199,17 +210,116 @@ SlashCmdList["BENEBLACK"] = function(msg)
             end
         end
         checkedallplayers()
+    else
+        print("You Are Not In A Party.")
+    end
+end
+
+
+-- Options Page
+
+-- Define the options frame
+local optionsFrame = CreateFrame("Frame", "MyAddonOptionsFrame", InterfaceOptionsFramePanelContainer)
+optionsFrame.name = "Classic Blacklist"
+
+-- Create a title text
+optionsFrame.title = optionsFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+optionsFrame.title:SetPoint("TOPLEFT", 16, -16)
+optionsFrame.title:SetText("Classic Blacklist Options")
+
+-- Create a checkbox
+optionsFrame.checkbox = CreateFrame("CheckButton", "MyAddonOptionCheckbox", optionsFrame, "InterfaceOptionsCheckButtonTemplate")
+optionsFrame.checkbox:SetPoint("TOPLEFT", optionsFrame.title, "BOTTOMLEFT", 0, -16)
+optionsFrame.checkbox:SetScript("OnClick", function(self)
+    -- Set the addon option to the checkbox value
+    local isChecked = self:GetChecked()
+    BeneSilence = isChecked  
+end)
+optionsFrame.checkbox.label = optionsFrame.checkbox:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+optionsFrame.checkbox.label:SetPoint("LEFT", optionsFrame.checkbox, "RIGHT", 0, 1)
+optionsFrame.checkbox.label:SetText("Silent Mode")
+
+-- Create a button
+optionsFrame.button = CreateFrame("Button", "MyAddonOptionButton", optionsFrame, "UIPanelButtonTemplate")
+optionsFrame.button:SetPoint("TOPLEFT", optionsFrame.checkbox, "BOTTOMLEFT", 0, -16)
+optionsFrame.button:SetSize(100, 25)
+optionsFrame.button:SetText("Force Check Party")
+optionsFrame.button:SetScript("OnClick", function(self)
+    recheck_party()
+end)
+
+-- Add the options frame to the Interface Options panel
+InterfaceOptions_AddCategory(optionsFrame)
+
+
+-- Slash Commands
+local function slash_commands(msg)
+    if (msg == "check") then
+        recheck_party()
     elseif (msg == "silent") then
         if (BeneSilence == false) then
             BeneSilence = true
             display_text("Benediction Blacklist - Silent Mode Activated")
             print("Benediction Blacklist - Silent Mode Activated")
+            optionsFrame.checkbox:SetChecked(BeneSilence)
         else
             BeneSilence = false
             display_text("Benediction Blacklist - Silent Mode Deactivated")
             print("Benediction Blacklist - Silent Mode Deactivated")
+            optionsFrame.checkbox:SetChecked(BeneSilence)
         end
+    elseif (msg == "settings") or (msg == "setting") then
+        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist")
+        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist") -- Call this twice to ensure the panel is fully opened
     else
         print(addonTable.benediction_black_date)
     end
-end 
+end
+
+SLASH_BENEBLACK1 = "/beneblack"
+SLASH_CLASSICBLACK1 = "/classicblack"
+SlashCmdList["BENEBLACK"] = function(msg)
+    slash_commands(msg)
+end
+SlashCmdList["CLASSICBLACK"] = function(msg)
+    slash_commands(msg)
+end
+
+
+-- Saving Data
+local function ClassicBlack_SaveData()
+    ClassicBlacklist_SavedVariables.silent_mode = BeneSilence
+end
+  
+
+local function ClassicBlack_OnLog(self, event, ...)
+    if event == "PLAYER_LOGOUT" or event == "PLAYER_LEAVING_WORLD" then
+        ClassicBlack_SaveData()
+    end
+end
+
+local Logout = CreateFrame("Frame")
+Logout:RegisterEvent("PLAYER_LOGOUT")
+Logout:RegisterEvent("PLAYER_LEAVING_WORLD")
+Logout:SetScript("OnEvent", ClassicBlack_OnLog)
+
+
+
+
+-- Loading Data
+local function ClassicBlack_LoadData()
+    if (ClassicBlacklist_SavedVariables) then
+        BeneSilence = ClassicBlacklist_SavedVariables.silent_mode
+        optionsFrame.checkbox:SetChecked(BeneSilence)
+    else
+        BeneSilence = false
+        ClassicBlacklist_SavedVariables = {}
+    end
+end
+local Login = CreateFrame("FRAME")
+Login:RegisterEvent("ADDON_LOADED")
+Login:SetScript("OnEvent", function(self, event, addonName)
+    if (event == "ADDON_LOADED") and (addonName == "BeneBlacklist") then
+        ClassicBlack_LoadData()
+    end
+end)
