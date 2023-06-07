@@ -90,57 +90,59 @@ local black_discord_link = "View The Blacklist At https://discord.gg/FCCdCnEF4d"
 local last_guilds_checked = {}
 local current_guilds_checked = {}
 function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
-    blacklist_popup = {}
-    if (trade == false) then
-        unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(i, false)
-    else
-        unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(1, true)
-    end
-    x_b_Ca = 0
-    is_in_tabl = inTable(BeneCGroup, unit_name)
-    if is_in_tabl == 0 then
+    if (ClassicBlacklist_Month_Old_Data == false) then
+        blacklist_popup = {}
         if (trade == false) then
-            table.insert(BeneCGroup, unit_name)
+            unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(i, false)
+        else
+            unit_name, guildName, lookup_list, lookup_g_list, lookup_p_tag, lookup_g_tag = getplayernameguildrealm(1, true)
         end
         x_b_Ca = 0
-        is_in_tabl, tag = inTabletwo(lookup_list, unit_name)
-        if is_in_tabl == 1 then
-            tag_status = lookup_p_tag[tag]
-            unit_name = remove_dash(unit_name)
-            black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
-            black_message_mini = unit_name.." is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
-            display_text(black_message_mini)
-            if (BeneSilence == false) then
-                SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-                SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-            else
-                print(black_message)
+        is_in_tabl = inTable(BeneCGroup, unit_name)
+        if is_in_tabl == 0 then
+            if (trade == false) then
+                table.insert(BeneCGroup, unit_name)
             end
-        end
-    end
-    x_b_Ca = 0
-    is_in_tabl = inTable(BeneDGroup, guildName)
-    if is_in_tabl == 0 then
-        if (trade == false) then
-            table.insert(BeneDGroup, guildName)
-        end
-        x_b_Ca = 0
-        is_in_tabl, tag = inTabletwo(lookup_g_list, guildName)
-        if is_in_tabl == 1 then
-            tag_status = lookup_g_tag[tag]
-            guildName = remove_dash(guildName)
             x_b_Ca = 0
-            is_in_tabl, null_tag = inTabletwo(last_guilds_checked, guildName)
-            if is_in_tabl == 0 then
-
-                black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
-                black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
+            is_in_tabl, tag = inTabletwo(lookup_list, unit_name)
+            if is_in_tabl == 1 then
+                tag_status = lookup_p_tag[tag]
+                unit_name = remove_dash(unit_name)
+                black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
+                black_message_mini = unit_name.." is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
                 display_text(black_message_mini)
                 if (BeneSilence == false) then
                     SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                     SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                 else
                     print(black_message)
+                end
+            end
+        end
+        x_b_Ca = 0
+        is_in_tabl = inTable(BeneDGroup, guildName)
+        if is_in_tabl == 0 then
+            if (trade == false) then
+                table.insert(BeneDGroup, guildName)
+            end
+            x_b_Ca = 0
+            is_in_tabl, tag = inTabletwo(lookup_g_list, guildName)
+            if is_in_tabl == 1 then
+                tag_status = lookup_g_tag[tag]
+                guildName = remove_dash(guildName)
+                x_b_Ca = 0
+                is_in_tabl, null_tag = inTabletwo(last_guilds_checked, guildName)
+                if is_in_tabl == 0 then
+
+                    black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
+                    black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
+                    display_text(black_message_mini)
+                    if (BeneSilence == false) then
+                        SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                        SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                    else
+                        print(black_message)
+                    end
                 end
             end
         end
@@ -192,26 +194,32 @@ function recheck_party()
     BeneCGroup = {"S"}
     black_det = 0
     current_guilds_checked = {}
-    if (IsInRaid() or IsInGroup()) then
-        for_i()
-    -- end
-        if (black_det == 0) then
-            if IsInRaid() then
-                check_party = "Raid Clear Of Any Blacklisted Players.  "  .. black_discord_link
-            elseif IsInGroup() then
-                check_party = "Party Clear Of Any Blacklisted Players.  "  .. black_discord_link
+    if (ClassicBlacklist_Month_Old_Data == false) then
+        if (IsInRaid() or IsInGroup()) then
+            for_i()
+        -- end
+            if (black_det == 0) then
+                if IsInRaid() then
+                    check_party = "Raid Clear Of Any Blacklisted Players.  "  .. black_discord_link
+                elseif IsInGroup() then
+                    check_party = "Party Clear Of Any Blacklisted Players.  "  .. black_discord_link
+                end
+                if (BeneSilence == false) then
+                    SendChatMessage(check_party, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                    SendChatMessage(addonTable.benediction_black_date, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+                else
+                    print(check_party)
+                    print(addonTable.benediction_black_date)
+                end
             end
-            if (BeneSilence == false) then
-                SendChatMessage(check_party, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-                SendChatMessage(addonTable.benediction_black_date, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-            else
-                print(check_party)
-                print(addonTable.benediction_black_date)
-            end
+            checkedallplayers()
+        else
+            print("You Are Not In A Party.")
         end
-        checkedallplayers()
     else
-        print("You Are Not In A Party.")
+        update_addon_text = "Your blacklist data is over a month old & has been disabled."
+        display_text(update_addon_text)
+        print(update_addon_text)
     end
 end
 
@@ -248,9 +256,13 @@ optionsFrame.button:SetScript("OnClick", function(self)
     recheck_party()
 end)
 
+-- Create a text label
+optionsFrame.label = optionsFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+optionsFrame.label:SetPoint("TOP", optionsFrame.button, "BOTTOM", 25, -10)
+optionsFrame.label:SetJustifyH("CENTER")
+
 -- Add the options frame to the Interface Options panel
 InterfaceOptions_AddCategory(optionsFrame)
-
 
 -- Slash Commands
 local function slash_commands(msg)
@@ -270,7 +282,7 @@ local function slash_commands(msg)
         end
     elseif (msg == "settings") or (msg == "setting") then
         InterfaceOptionsFrame_OpenToCategory("Classic Blacklist")
-        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist") -- Call this twice to ensure the panel is fully opened
+        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist") -- Call this twice to ensure the panel is fully opened    
     else
         print(addonTable.benediction_black_date)
     end
@@ -304,7 +316,33 @@ Logout:RegisterEvent("PLAYER_LEAVING_WORLD")
 Logout:SetScript("OnEvent", ClassicBlack_OnLog)
 
 
+-- Getting how old the data is
+local function date_since_update()
+    local dateStr = string.match(addonTable.benediction_black_date, "%d%d%d%d%-%d%d%-%d%d")
+    local year, month, day = dateStr:match("(%d+)-(%d+)-(%d+)")
 
+    local currentDate = date("*t")
+    local targetDate = {year = tonumber(year), month = tonumber(month), day = tonumber(day)}
+    local currentTimestamp = time(currentDate)
+    local targetTimestamp = time(targetDate)
+
+    local secondsPerDay = 24 * 60 * 60
+    local dayDifference = math.abs(math.floor((targetTimestamp - currentTimestamp) / secondsPerDay)) - 1
+
+    optionsFrame.label:SetText("Blacklist Data : " .. dayDifference .. " days old.")
+
+    if (dayDifference >= 7) and (dayDifference < 30) then
+        update_addon_text = "Your blacklist data is over a week old.  Recommend updating Classic Blacklist."
+        display_text(update_addon_text)
+        print(update_addon_text)
+    end
+    if (dayDifference >= 30) then
+        ClassicBlacklist_Month_Old_Data = true
+        update_addon_text = "Your blacklist data is over a month old & has been disabled."
+        display_text(update_addon_text)
+        print(update_addon_text)
+    end
+end
 
 -- Loading Data
 local function ClassicBlack_LoadData()
@@ -315,6 +353,8 @@ local function ClassicBlack_LoadData()
         BeneSilence = false
         ClassicBlacklist_SavedVariables = {}
     end
+    ClassicBlacklist_Month_Old_Data = false
+    date_since_update()
 end
 local Login = CreateFrame("FRAME")
 Login:RegisterEvent("ADDON_LOADED")
@@ -323,3 +363,7 @@ Login:SetScript("OnEvent", function(self, event, addonName)
         ClassicBlack_LoadData()
     end
 end)
+
+
+
+
