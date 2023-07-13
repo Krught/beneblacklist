@@ -58,7 +58,8 @@ function getplayernameguildrealm(i, trade)
         if IsInRaid() then
             unit_name, unit_realm = (UnitName("raid"..i))
             guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("raid"..i))
-        elseif IsInGroup() then
+        --elseif IsInGroup() then
+        else
             if (i == 1) then
                 unit_name, unit_realm = (UnitName("player"))
                 guildName, guildRankName, guildRankIndex = GetGuildInfo(UnitName("player"))
@@ -89,6 +90,8 @@ end
 local black_discord_link = "View The Blacklist At https://discord.gg/FCCdCnEF4d"
 local last_guilds_checked = {}
 local current_guilds_checked = {}
+local self_blacklist = false
+local first_self = true
 function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
     if (ClassicBlacklist_Month_Old_Data == false) then
         blacklist_popup = {}
@@ -110,8 +113,10 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
                 unit_name = remove_dash(unit_name)
                 black_message = unit_name.." is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
                 black_message_mini = unit_name.." is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
-                display_text(black_message_mini)
-                if (BeneSilence == false) then
+                if (first_self ~= true) then
+                    display_text(black_message_mini)
+                end
+                if ((BeneSilence == false) or (self_blacklist == true)) then
                     SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                     SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                 else
@@ -133,11 +138,12 @@ function mainchecker(i, BeneCGroup, black_det, BeneSilence, BeneDGroup, trade)
                 x_b_Ca = 0
                 is_in_tabl, null_tag = inTabletwo(last_guilds_checked, guildName)
                 if is_in_tabl == 0 then
-
                     black_message = "<"..guildName.."> is on the Classic Blacklist for ".. tag_status .."!"  --.. black_discord_link
                     black_message_mini = "<".. guildName.."> is on the Classic Blacklist!" .. "\n" .. "Reason: ".. tag_status
-                    display_text(black_message_mini)
-                    if (BeneSilence == false) then
+                    if (first_self ~= true) then
+                        display_text(black_message_mini)
+                    end
+                    if ((BeneSilence == false) or (self_blacklist == true)) then
                         SendChatMessage(black_message, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                         SendChatMessage(black_discord_link, IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
                     else
@@ -344,6 +350,16 @@ local function date_since_update()
     end
 end
 
+-- Self Blacklist Check
+local function selfBlacklist()
+    black_det = 0
+    mainchecker(1, BeneCGroup, black_det, BeneSilence, BeneDGroup, false)
+    if (black_det ~= 0) then
+        self_blacklist = true
+    end
+    first_self = false
+end
+
 -- Loading Data
 local function ClassicBlack_LoadData()
     if (ClassicBlacklist_SavedVariables) then
@@ -355,6 +371,7 @@ local function ClassicBlack_LoadData()
     end
     ClassicBlacklist_Month_Old_Data = false
     date_since_update()
+    selfBlacklist()
 end
 local Login = CreateFrame("FRAME")
 Login:RegisterEvent("ADDON_LOADED")
