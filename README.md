@@ -15,21 +15,6 @@ Please Report players on your server discord or over at https://discord.gg/FCCdC
 Supported Servers:
 Benediction - https://discord.gg/benediction
 
-Faerlina - https://discord.gg/faerlina
-
-Atiesh - https://discord.gg/atiesh
-
-Firemaw - https://discord.com/invite/xQHT7P4JRc
-
-Gehennas - https://discord.gg/gehennas
-
-Golemagg - https://discord.gg/golemagg
-
-Mograine - https://discord.gg/mograine
-
-Pyrewood Village - https://discord.com/invite/BvEKtzsubF
-
-Sulfuras - https://discord.com/invite/sQBeFCTkxU
 
  
 

@@ -16,7 +16,7 @@ end
 function inTable(table_c_black, item)
     x_b_Ca = 0
     for key, value in pairs(table_c_black) do
-        if value == item then 
+        if value == item then
             x_b_Ca = 1
         else
             if x_b_Ca ~= 1 then
@@ -30,7 +30,7 @@ function inTabletwo(table_c_black, item)
     x_b_Ca = 0
     tag = 0
     for key, value in pairs(table_c_black) do
-        if value == item then 
+        if value == item then
             x_b_Ca = 1
             black_det = 1
             tag = key
@@ -247,7 +247,7 @@ optionsFrame.checkbox:SetPoint("TOPLEFT", optionsFrame.title, "BOTTOMLEFT", 0, -
 optionsFrame.checkbox:SetScript("OnClick", function(self)
     -- Set the addon option to the checkbox value
     local isChecked = self:GetChecked()
-    BeneSilence = isChecked  
+    BeneSilence = isChecked
 end)
 optionsFrame.checkbox.label = optionsFrame.checkbox:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 optionsFrame.checkbox.label:SetPoint("LEFT", optionsFrame.checkbox, "RIGHT", 0, 1)
@@ -288,7 +288,7 @@ local function slash_commands(msg)
         end
     elseif (msg == "settings") or (msg == "setting") then
         InterfaceOptionsFrame_OpenToCategory("Classic Blacklist")
-        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist") -- Call this twice to ensure the panel is fully opened    
+        InterfaceOptionsFrame_OpenToCategory("Classic Blacklist") -- Call this twice to ensure the panel is fully opened
     else
         print(addonTable.benediction_black_date)
     end
@@ -308,7 +308,7 @@ end
 local function ClassicBlack_SaveData()
     ClassicBlacklist_SavedVariables.silent_mode = BeneSilence
 end
-  
+
 
 local function ClassicBlack_OnLog(self, event, ...)
     if event == "PLAYER_LOGOUT" or event == "PLAYER_LEAVING_WORLD" then
@@ -360,6 +360,19 @@ local function selfBlacklist()
     first_self = false
 end
 
+-- Check Server
+local function CurrentServer()
+    unit_realm = GetRealmName()
+    blacklisted_servers = {"Faerlina", "Firemaw", "Golemagg", "Atiesh", "Sulfuras", "Gehennas", "Mograine", "Pyrewood Village"}
+    x_b_Ca = inTable(blacklisted_servers, unit_realm)
+    if x_b_Ca == 1 then
+        update_addon_text = "Classic Blacklist - The Server '" .. unit_realm .. "' is no longer supported, please reach out to your server discords moderators for more info."
+        display_text(update_addon_text)
+        print(update_addon_text)
+    end
+    x_b_Ca = 0
+end
+
 -- Loading Data
 local function ClassicBlack_LoadData()
     if (ClassicBlacklist_SavedVariables) then
@@ -372,6 +385,7 @@ local function ClassicBlack_LoadData()
     ClassicBlacklist_Month_Old_Data = false
     date_since_update()
     selfBlacklist()
+    CurrentServer()
 end
 local Login = CreateFrame("FRAME")
 Login:RegisterEvent("ADDON_LOADED")
