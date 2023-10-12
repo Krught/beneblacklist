@@ -397,4 +397,44 @@ end)
 
 
 
+--Run On Instanced Content
+local ClassicInstanceBlack = CreateFrame("Frame")
+
+
+local function CheckMapInfo()
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID then
+        local mapInfo = C_Map.GetMapInfo(mapID)
+        local zoneType = select(2, IsInInstance())
+        return zoneType
+    else
+        C_Timer.After(5, function()
+            local zoneType = CheckMapInfo()
+            return zoneType
+        end)
+    end
+end
+
+
+function ClassicInstanceBlack:OnEvent(event, arg1, arg2, arg3, arg4)
+    if event == "PLAYER_ENTERING_WORLD" then
+        C_Timer.After(5, function()
+            -- Check if the player is in an instance group dungeon
+
+            local zoneType = CheckMapInfo()
+
+            if zoneType == "party" or zoneType == "raid" then
+
+                recheck_party()
+
+            end
+        end)
+    end
+end
+
+ClassicInstanceBlack:RegisterEvent("PLAYER_ENTERING_WORLD")
+ClassicInstanceBlack:SetScript("OnEvent", ClassicInstanceBlack.OnEvent)
+
+
+
 
