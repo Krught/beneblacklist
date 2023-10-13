@@ -425,7 +425,11 @@ function ClassicInstanceBlack:OnEvent(event, arg1, arg2, arg3, arg4)
 
             if zoneType == "party" or zoneType == "raid" then
 
-                recheck_party()
+                -- recheck_party()
+                black_det = 0
+                for_i()
+
+
 
             end
         end)
