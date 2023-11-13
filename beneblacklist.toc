@@ -3,7 +3,7 @@
 ## Notes: The Blacklist for Classic.
 ## SavedVariables: ClassicBlacklist_SavedVariables
 ## Author: Remour
-## Version: 0.00314
+## Version: 0.00315
 
 benediction.lua
 main.lua
