@@ -12,13 +12,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Exclude unwanted files and create ZIP
+      - name: Create BeneBlacklist folder
         run: |
-          mkdir temp_zip
-          zip -r temp_zip/BeneBlacklist.zip . -x '.github/*' '.gitignore' 'pkgmeta.yaml'
+          mkdir BeneBlacklist
+          cp -r !(.github|.gitignore|pkgmeta.yaml) BeneBlacklist/
+
+      - name: Create ZIP file
+        run: |
           timestamp=$(date +"%Y-%m-%d")
-          zip -r "BeneBlacklist-$timestamp.zip" temp_zip/BeneBlacklist.zip
-          rm -rf temp_zip
+          zip -r "BeneBlacklist-$timestamp.zip" BeneBlacklist
+          rm -rf BeneBlacklist
+      
       
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
