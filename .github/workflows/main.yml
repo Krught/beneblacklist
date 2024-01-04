@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Exclude unwanted files and create ZIP
+        run: |
+          zip -r BeneBlacklist.zip . -x '.github/*' '.gitignore' 'pkgmeta.yaml'
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -19,3 +22,5 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: false
           title: "Todays Build"
+          files: |
+            BeneBlacklist.zip
