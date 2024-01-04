@@ -14,7 +14,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Exclude unwanted files and create ZIP
         run: |
-          zip -r BeneBlacklist.zip . -x '.github/*' '.gitignore' 'pkgmeta.yaml'
+          mkdir temp_zip
+          zip -r temp_zip/BeneBlacklist.zip . -x '.github/*' '.gitignore' 'pkgmeta.yaml'
+          timestamp=$(date +"%Y-%m-%d")
+          zip -r "BeneBlacklist-$timestamp.zip" temp_zip/BeneBlacklist.zip
+          rm -rf temp_zip
+      
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -23,4 +28,4 @@ jobs:
           prerelease: false
           title: "Todays Build"
           files: |
-            BeneBlacklist.zip
+            BeneBlacklist-*.zip
