@@ -20,7 +20,8 @@ jobs:
 
       - name: Create ZIP file
         run: |
-          zip -r "BeneBlacklist-wrath.zip" BeneBlacklist
+          timestamp=$(date +"%Y-%m-%d")
+          zip -r "BeneBlacklist-wrath-$timestamp.zip" BeneBlacklist
           rm -rf BeneBlacklist
       
       
