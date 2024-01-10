@@ -12,6 +12,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Create BeneBlacklist folder
+        run: |
+          mkdir BeneBlacklist
+          find . -maxdepth 1 -type f ! -name '*.github' ! -name '.gitignore' ! -name 'pkgmeta.yaml' -exec cp -r {} BeneBlacklist \;
+      
+
+      - name: Create ZIP file
+        run: |
+          zip -r "BeneBlacklist-wrath.zip" BeneBlacklist
+          rm -rf BeneBlacklist
+      
+      
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -19,3 +31,5 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: false
           title: "Todays Build"
+          files: |
+            BeneBlacklist-*.zip
