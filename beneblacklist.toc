@@ -1,9 +1,9 @@
-## Interface: 30403
+## Interface: 40400
 ## Title: Bene Blacklist
 ## Notes: The Blacklist for Classic.
 ## SavedVariables: ClassicBlacklist_SavedVariables
 ## Author: Remour
-## Version: 0.00548
+## Version: 0.00549
 
 benediction.lua
 main.lua
